@@ -1,0 +1,30 @@
+body{
+    margin:0;
+    padding:0;
+    background:#111;
+    font-family:Tahoma;
+    color:white;
+    text-align:center;
+}
+
+.container{
+    margin-top:40px;
+}
+
+h1{
+    color:#ff4444;
+    font-size:40px;
+}
+
+.video-box{
+    margin:auto;
+    width:720px;
+    border:5px solid red;
+    border-radius:15px;
+    overflow:hidden;
+    box-shadow:0 0 20px red;
+}
+
+img{
+    width:100%;
+}

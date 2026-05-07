@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fire Detection</title>
+</head>
+<body style="text-align:center">
+
+<h1>🔥 Fire Detection System</h1>
+
+<button onclick="startCamera()">تشغيل الكاميرا</button>
+<button onclick="stopCamera()">إيقاف الكاميرا</button>
+
+<br><br>
+
+<img id="video" width="700">
+
+<script>
+function startCamera() {
+    document.getElementById("video").src = "/video_feed";
+    fetch('/start');
+}
+
+function stopCamera() {
+    document.getElementById("video").src = "";
+    fetch('/stop');
+}
+</script>
+
+</body>
+</html>
