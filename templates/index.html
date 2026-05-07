@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Fire Detection Mobile</title>
+    <title>Fire Detection</title>
 </head>
 
 <body style="text-align:center">
@@ -19,7 +19,7 @@
 <script>
 let video = document.getElementById("video");
 
-// تشغيل الكاميرا من الجوال
+// تشغيل الكاميرا
 function startCamera() {
     navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
@@ -27,11 +27,11 @@ function startCamera() {
         sendFrames();
     })
     .catch(err => {
-        alert("خطأ في الكاميرا: " + err);
+        alert("Camera error: " + err);
     });
 }
 
-// إرسال صور للسيرفر
+// إرسال فريمات للسيرفر
 function sendFrames() {
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");

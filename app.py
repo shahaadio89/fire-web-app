@@ -1,41 +1,50 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import cv2
 import numpy as np
 import os
 
 app = Flask(__name__)
 
-# تحميل نموذج الحريق
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-xml_path = os.path.join(BASE_DIR, "fire_detection.xml")
-
-fire_cascade = cv2.CascadeClassifier(xml_path)
-
-print("Loaded:", not fire_cascade.empty())
-
-# حالة الحريق
 fire_detected = False
 
 
+# =========================
+# كشف النار باللون (HSV)
+# =========================
+def detect_fire(frame):
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # نطاق ألوان النار (أحمر + برتقالي + أصفر)
+    lower = np.array([0, 120, 150])
+    upper = np.array([35, 255, 255])
+
+    mask = cv2.inRange(hsv, lower, upper)
+
+    fire_pixels = cv2.countNonZero(mask)
+
+    return fire_pixels > 3000
+
+
+# =========================
+# الصفحة الرئيسية
+# =========================
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
-# API استقبال صورة من الجوال وتحليلها
+# =========================
+# استقبال صورة من الجوال
+# =========================
 @app.route('/detect_fire', methods=['POST'])
-def detect_fire():
+def detect_fire_api():
     global fire_detected
 
     file = request.files['frame']
     npimg = np.frombuffer(file.read(), np.uint8)
     frame = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
 
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    fires = fire_cascade.detectMultiScale(gray, 1.1, 5)
-
-    if len(fires) > 0:
+    if detect_fire(frame):
         fire_detected = True
     else:
         fire_detected = False
@@ -43,11 +52,16 @@ def detect_fire():
     return jsonify({"fire": fire_detected})
 
 
-# API لحالة الحريق
+# =========================
+# حالة الحريق
+# =========================
 @app.route('/status')
 def status():
     return jsonify({"fire": fire_detected})
 
 
+# =========================
+# تشغيل السيرفر
+# =========================
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
