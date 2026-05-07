@@ -3,27 +3,25 @@
 <head>
     <title>Fire Detection</title>
 </head>
+
 <body style="text-align:center">
 
 <h1>🔥 Fire Detection System</h1>
 
-<button onclick="startCamera()">تشغيل الكاميرا</button>
-<button onclick="stopCamera()">إيقاف الكاميرا</button>
+<img src="/video_feed" width="700">
 
-<br><br>
-
-<img id="video" width="700">
+<audio id="alarm" src="/static/alarm.mp3"></audio>
 
 <script>
-function startCamera() {
-    document.getElementById("video").src = "/video_feed";
-    fetch('/start');
-}
-
-function stopCamera() {
-    document.getElementById("video").src = "";
-    fetch('/stop');
-}
+setInterval(() => {
+    fetch('/fire_status')
+    .then(res => res.json())
+    .then(data => {
+        if (data.fire === true) {
+            document.getElementById("alarm").play();
+        }
+    });
+}, 1000);
 </script>
 
 </body>
