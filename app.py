@@ -9,20 +9,34 @@ fire_detected = False
 
 
 # =========================
-# كشف النار باللون (HSV)
+# 🔥 كشف النار المحسن
 # =========================
 def detect_fire(frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    # نطاق ألوان النار (أحمر + برتقالي + أصفر)
-    lower = np.array([0, 120, 150])
-    upper = np.array([35, 255, 255])
+    # نطاقات لون النار (أدق)
+    lower1 = np.array([0, 120, 150])
+    upper1 = np.array([15, 255, 255])
 
-    mask = cv2.inRange(hsv, lower, upper)
+    lower2 = np.array([15, 120, 150])
+    upper2 = np.array([35, 255, 255])
+
+    mask1 = cv2.inRange(hsv, lower1, upper1)
+    mask2 = cv2.inRange(hsv, lower2, upper2)
+
+    mask = mask1 + mask2
+
+    # تنظيف الضوضاء
+    kernel = np.ones((5, 5), np.uint8)
+    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
+    mask = cv2.dilate(mask, kernel, iterations=1)
 
     fire_pixels = cv2.countNonZero(mask)
 
-    return fire_pixels > 3000
+    total_pixels = frame.shape[0] * frame.shape[1]
+    fire_ratio = fire_pixels / total_pixels
+
+    return fire_ratio > 0.02
 
 
 # =========================

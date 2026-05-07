@@ -19,7 +19,6 @@
 <script>
 let video = document.getElementById("video");
 
-// تشغيل الكاميرا
 function startCamera() {
     navigator.mediaDevices.getUserMedia({ video: true })
     .then(stream => {
@@ -31,7 +30,6 @@ function startCamera() {
     });
 }
 
-// إرسال فريمات للسيرفر
 function sendFrames() {
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
