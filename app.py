@@ -36,7 +36,8 @@ def detect_fire(frame):
     total_pixels = frame.shape[0] * frame.shape[1]
     fire_ratio = fire_pixels / total_pixels
 
-    return fire_ratio > 0.02
+    return fire_ratio > 0.008
+
 
 
 # =========================
