@@ -1,28 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Fire Detection</title>
-</head>
+<video id="video" autoplay playsinline></video>
 
-<body style="text-align:center">
-
-<h1>🔥 Fire Detection System</h1>
-
-<img src="/video_feed" width="700">
-
-<audio id="alarm" src="/static/alarm.mp3"></audio>
+<button onclick="startCamera()">تشغيل الكاميرا</button>
 
 <script>
-setInterval(() => {
-    fetch('/fire_status')
-    .then(res => res.json())
-    .then(data => {
-        if (data.fire === true) {
-            document.getElementById("alarm").play();
-        }
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        document.getElementById("video").srcObject = stream;
+    })
+    .catch(err => {
+        alert("ما قدرت أفتح الكاميرا: " + err);
     });
-}, 1000);
+}
 </script>
-
-</body>
-</html>
